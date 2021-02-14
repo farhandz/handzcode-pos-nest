@@ -7,14 +7,17 @@ import {
   Param,
   Delete,
   Query,
+  UseGuards,
 } from '@nestjs/common';
 import { Observable, from } from 'rxjs';
 import { ProductService } from './product.service';
 import { Product } from './product.interface';
+import { JwtAuthGuard } from 'src/guard/jwt-guard';
 
 @Controller('product')
 export class ProductController {
   constructor(private productService: ProductService) {}
+  @UseGuards(JwtAuthGuard)
   @Get('')
   getData(
     @Query('data') data: string,
