@@ -5,4 +5,5 @@ export interface Product extends Document {
   service: string;
   price: string;
   note: string;
+  name: string;
 }

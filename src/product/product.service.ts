@@ -1,18 +1,56 @@
-import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Product } from './product.interface';
 import { Observable, from } from 'rxjs';
+import { map } from 'rxjs/operators';
+import { Injectable } from '@nestjs/common';
 @Injectable()
 export class ProductService {
   constructor(
-    @InjectModel('Pulsa') private readonly productModel: Model<Product>,
+    @InjectModel('Product') private readonly productModel: Model<Product>,
   ) {}
 
-  getDataProduct(): Observable<Product[]> {
-    return from(this.productModel.find());
+  getDataProduct(data: string, sort: string): Observable<Product[]> {
+    return !data
+      ? from(this.productModel.find())
+      : from(
+          this.productModel
+            .find({ name: { $regex: '.*' + data + '.*' } })
+            .sort(
+              sort === 'termurah'
+                ? { price: 1 }
+                : sort === 'termahal'
+                ? { price: 1 }
+                : {},
+            ),
+        );
   }
   insertDataProduct(product: Product): Observable<Product> {
     return from(this.productModel.create(product));
+  }
+
+  updateDataProducct(id: string, product: Product): Observable<Product> {
+    return from(
+      this.productModel.findByIdAndUpdate(id, product, { new: true }),
+    );
+  }
+
+  deleteOne(id: string): Observable<any> {
+    return from(this.productModel.deleteOne({ _id: id })).pipe(
+      map((data: any) => {
+        return {
+          message: 'sukses delete data',
+          data,
+        };
+      }),
+    );
+  }
+
+  dataDetail(id: string): Observable<Product> {
+    return from(this.productModel.findById(id)).pipe(
+      map((data: Product) => {
+        return data;
+      }),
+    );
   }
 }
