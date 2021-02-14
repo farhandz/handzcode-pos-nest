@@ -25,10 +25,14 @@ export class ProductController {
   ): Observable<Product[]> {
     return from(this.productService.getDataProduct(data, sort));
   }
+
+  @UseGuards(JwtAuthGuard)
   @Post('')
   insertData(@Body() product: Product): Observable<Product> {
     return this.productService.insertDataProduct(product);
   }
+
+  @UseGuards(JwtAuthGuard)
   @Put(':id')
   updateData(
     @Body() product: Product,
@@ -37,11 +41,13 @@ export class ProductController {
     return from(this.productService.updateDataProducct(id, product));
   }
 
+  @UseGuards(JwtAuthGuard)
   @Delete(':id')
   DeleteData(@Param('id') id: string): Observable<any> {
     return from(this.productService.deleteOne(id));
   }
 
+  @UseGuards(JwtAuthGuard)
   @Get(':id')
   getDataOne(@Param('id') id: string): Observable<Product> {
     return from(this.productService.dataDetail(id));
