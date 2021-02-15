@@ -12,10 +12,15 @@ export class ProductService {
 
   getDataProduct(data: string, sort: string): Observable<Product[]> {
     return !data
-      ? from(this.productModel.find())
+      ? from(
+          this.productModel
+            .find()
+            .populate({ path: 'categoryid', select: 'category' }),
+        )
       : from(
           this.productModel
             .find({ name: { $regex: '.*' + data + '.*' } })
+            .populate({ path: 'categoryid', select: 'category' })
             .sort(
               sort === 'termurah'
                 ? { price: 1 }

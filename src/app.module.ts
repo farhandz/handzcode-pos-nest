@@ -9,6 +9,7 @@ import { HistoryModule } from './history/history.module';
 import { TrackingResiModule } from './tracking-resi/tracking-resi.module';
 import { EmployeModule } from './employe/employe.module';
 import { DiscountModule } from './discount/discount.module';
+import { CategoryModule } from './category/category.module';
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import { DiscountModule } from './discount/discount.module';
     TrackingResiModule,
     EmployeModule,
     DiscountModule,
+    CategoryModule,
   ],
   controllers: [AppController],
   providers: [AppService],
