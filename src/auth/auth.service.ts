@@ -15,9 +15,11 @@ export class AuthService {
     // console.log(user);
     return from(
       this.jwtService.signAsync({
-        nama: user.nama,
+        name: user.name,
+        id: user._id,
         email: user.email,
         role: user.role,
+        level: user.level,
       }),
     );
   }

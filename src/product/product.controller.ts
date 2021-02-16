@@ -13,26 +13,30 @@ import { Observable, from } from 'rxjs';
 import { ProductService } from './product.service';
 import { Product } from './product.interface';
 import { JwtAuthGuard } from 'src/guard/jwt-guard';
+import { RolesGuard } from 'src/guard/roles.guard';
 
 @Controller('product')
 export class ProductController {
   constructor(private productService: ProductService) {}
-  @UseGuards(JwtAuthGuard)
   @Get('')
   getData(
     @Query('data') data: string,
     @Query('sort') sort: string,
+    @Query('category') category: string,
   ): Observable<Product[]> {
-    return from(this.productService.getDataProduct(data, sort));
+    console.log(category);
+    return from(this.productService.getDataProduct(data, sort, category));
   }
 
-  @UseGuards(JwtAuthGuard)
+  // admin only can access this method
+  @UseGuards(JwtAuthGuard, RolesGuard)
   @Post('')
   insertData(@Body() product: Product): Observable<Product> {
     return this.productService.insertDataProduct(product);
   }
 
-  @UseGuards(JwtAuthGuard)
+  // admin only can access this method
+  @UseGuards(JwtAuthGuard, RolesGuard)
   @Put(':id')
   updateData(
     @Body() product: Product,
@@ -41,13 +45,15 @@ export class ProductController {
     return from(this.productService.updateDataProducct(id, product));
   }
 
-  @UseGuards(JwtAuthGuard)
+  // admin only can access this method
+  @UseGuards(JwtAuthGuard, RolesGuard)
   @Delete(':id')
   DeleteData(@Param('id') id: string): Observable<any> {
     return from(this.productService.deleteOne(id));
   }
 
-  @UseGuards(JwtAuthGuard)
+  // admin only can access this method
+  @UseGuards(JwtAuthGuard, RolesGuard)
   @Get(':id')
   getDataOne(@Param('id') id: string): Observable<Product> {
     return from(this.productService.dataDetail(id));

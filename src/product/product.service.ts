@@ -10,12 +10,20 @@ export class ProductService {
     @InjectModel('Product') private readonly productModel: Model<Product>,
   ) {}
 
-  getDataProduct(data: string, sort: string): Observable<Product[]> {
+  getDataProduct(
+    data: string,
+    sort: string,
+    category: string,
+  ): Observable<Product[]> {
     return !data
       ? from(
           this.productModel
-            .find()
-            .populate({ path: 'categoryid', select: 'category' }),
+            .find(!category ? {} : { categoryid: category })
+            .populate({
+              path: 'categoryid',
+              select: 'category',
+              populate: { path: 'categoryid' },
+            }),
         )
       : from(
           this.productModel
